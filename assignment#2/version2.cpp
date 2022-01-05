@@ -4,10 +4,11 @@
 // Assignment #2
 // October 2nd, 2020
 // Paul Pospisil
-// version1.cpp
-// Purpose: To calculate and compute the different components used in
-//          calculating the overall in-are distance travelled and
-//          travelling time.
+// version2.cpp
+/* Purpose: To calculate and compute the different components used in
+            calculating the overall in-are distance travelled and
+            travelling time.
+*/
 
 #include <iostream>
 #include <cmath>
@@ -22,9 +23,10 @@ int main()
     double landing_angle;
     double velocity;
     
-// Welcomes the user to the program and asks them to input values that are used 
-// in calcuating the converted rates, in-air distance, velocity, and travelling
-// time.
+/* Welcomes the user to the program and asks them to input values that are used 
+   in calcuating the converted rates, in-air distance, velocity, and travelling
+   time.
+*/
     cout << "Welcome to the Air Cha–Cha Distance Finder. Ready to calculate... "
     << endl;
     
@@ -46,7 +48,7 @@ int main()
     cout << endl;
 
 // The double values that are converted to km and radian(s) respectively
-// from the original input that the user made in feet and degrees.    
+// from the original input that the user made in feet and degrees.      
     double converted_altitude;
     double converted_takeoff_angle;
     double converted_descent_angle;

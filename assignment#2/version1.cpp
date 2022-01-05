@@ -5,9 +5,10 @@
 // October 2nd, 2020
 // Paul Pospisil
 // version1.cpp
-// Purpose: To calculate and compute the different components used in
-//          calculating the overall in-are distance travelled and
-//          travelling time.
+/* Purpose: To calculate and compute the different components used in
+            calculating the overall in-are distance travelled and
+            travelling time.
+*/
 
 #include <iostream>
 #include <cmath>
@@ -22,6 +23,7 @@ int main()
 
 // Welcomes the user to the program and asks them to input values that are used 
 // in calcuating the converted rates, in-air distance, and travelling time.
+
     cout << "Welcome to the Air Cha–Cha Distance Finder. Ready to calculate... "
     << endl;
     
@@ -59,14 +61,12 @@ int main()
 
 // The calculations used to find out the takeoff distance, horizontal distance,
 // and altitude distance.
-
     takeoff_distance = converted_altitude / sin(converted_angle);
     horizontal_distance = converted_altitude / tan(converted_angle);
     altitude_distance = ground_distance - (2 * horizontal_distance);
 
 // The final calculations used to calculate the desired output based off of
 // the users input.
-
     in_air_distance = altitude_distance + (takeoff_distance * 2);
     travelling_time = in_air_distance / 400;
     velocity = in_air_distance / travelling_time;
