@@ -1,0 +1,357 @@
+Script started on 2020-10-01 15:56:05-06:00
+bash: /opt/rh/rh-mysql56/enable: No such file or directory
+[hahma485@ins.mtroyal.ca ~/second_year/comp1631/assignments/assignment#2/a2> pwd
+/users/hahma485/second_year/comp1631/assignments/assignment#2/a2
+[hahma485@ins.mtroyal.ca ~/second_year/comp1631/assignments/assignment#2/a2> lsd [K[K -al
+total 8
+drwxr-xr-x 2 hahma485 students.pg   64 Oct  1 15:56 [0m[01;34m.[0m
+drwxr-xr-x 3 hahma485 students.pg  111 Oct  1 15:55 [01;34m..[0m
+-rw-r--r-- 1 hahma485 students.pg    0 Oct  1 15:56 typescript
+-rw-r--r-- 1 hahma485 students.pg 3023 Oct  1 15:37 version1.cpp
+-rw-r--r-- 1 hahma485 students.pg 3859 Oct  1 14:03 version2.cpp
+[hahma485@ins.mtroyal.ca ~/second_year/comp1631/assignments/assignment#2/a2> cat version1.cpp 
+// Haris Ahmad
+// hahma485@mtroyal.ca
+// COMP 1631
+// Assignment #2
+// October 2nd, 2020
+// Paul Pospisil
+// version1.cpp
+/* Purpose: To calculate and compute the different components used in
+            calculating the overall in-are distance travelled and
+            travelling time.
+*/
+
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+int main()
+{
+// The integer names that are going to be user inputted.
+    double ground_distance;
+    double flying_altitude;
+    double takeoff_angle;
+
+// Welcomes the user to the program and asks them to input values that are used 
+// in calcuating the converted rates, in-air distance, and travelling time.
+
+    cout << "Welcome to the Air Cha–Cha Distance Finder. Ready to calculate... "
+    << endl;
+    
+    cout << "Enter ground distance (in kilometers): ";
+    cin >> ground_distance;
+
+    cout << "Enter flying-altitude (in feet): "; 
+    cin >> flying_altitude;
+
+    cout << "Enter angle for take-off (in degrees): ";
+    cin >> takeoff_angle;
+
+    cout << endl;
+
+// The double values that are converted to km and radians respectively from the
+// original input that the user made in feet and degrees.    
+    double converted_altitude;
+    double converted_angle;
+
+// The double values that are used in calculating the in-air distance and hence
+// the travelling time as well. 
+    double takeoff_distance;
+    double horizontal_distance;
+    double altitude_distance;
+
+// These are the double values which are outputted using the takeoff distance,
+// horizontal distance, and altitude distance.
+    double in_air_distance;
+    double travelling_time;
+    double velocity;
+
+// Converts the altitude from feet to km and the angle from degrees to radians.    
+    converted_altitude = flying_altitude * 0.0003048;
+    converted_angle = (takeoff_angle * (2 * M_PI)) / 360;
+
+// The calculations used to find out the takeoff distance, horizontal distance,
+// and altitude distance.
+    takeoff_distance = converted_altitude / sin(converted_angle);
+    horizontal_distance = converted_altitude / tan(converted_angle);
+    altitude_distance = ground_distance - (2 * horizontal_distance);
+
+// The final calculations used to calculate the desired output based off of
+// the users input.
+    in_air_distance = altitude_distance + (takeoff_distance * 2);
+    travelling_time = in_air_distance / 400;
+    velocity = in_air_distance / travelling_time;
+
+// The output given to the user (trip data).
+    cout << "Trip data:" << endl;
+
+    cout << "Ground distance = " << ground_distance << " km" << endl;
+
+    cout << "Altitude = " << flying_altitude << " feet (";
+    cout << converted_altitude << " km)" << endl;
+
+    cout << "Take-off angle = " << takeoff_angle << " degrees (";
+    cout << converted_angle << " radians)" << endl;
+
+    cout << "Default velocity = " << velocity << " km/hr" << endl << endl;
+
+    cout << "In-air distance = " << in_air_distance << " km" << endl;
+
+    cout << "Travelling time = " << travelling_time << " hours" << endl;
+
+    
+ return 0;
+
+}
+[hahma485@ins.mtroyal.ca ~/second_year/comp1631/assignments/assignment#2/a2> g++ version1.cpp 
+[hahma485@ins.mtroyal.ca ~/second_year/comp1631/assignments/assignment#2/a2> a.out
+Welcome to the Air Cha–Cha Distance Finder. Ready to calculate... 
+Enter ground distance (in kilometers): 1000
+Enter flying-altitude (in feet): 100
+Enter angle for take-off (in degrees): 45
+
+Trip data:
+Ground distance = 1000 km
+Altitude = 100 feet (0.03048 km)
+Take-off angle = 45 degrees (0.785398 radians)
+Default velocity = 400 km/hr
+
+In-air distance = 1000.03 km
+Travelling time = 2.50006 hours
+[hahma485@ins.mtroyal.ca ~/second_year/comp1631/assignments/assignment#2/a2> a.outg++ version1.cpp 
+[hahma485@ins.mtroyal.ca ~/second_year/comp1631/assignments/assignment#2/a2> g++ version1.cpp a.out[K
+Welcome to the Air Cha–Cha Distance Finder. Ready to calculate... 
+Enter ground distance (in kilometers): 2354
+Enter flying-altitude (in feet): 84
+Enter angle for take-off (in degrees): 30
+
+Trip data:
+Ground distance = 2354 km
+Altitude = 84 feet (0.0256032 km)
+Take-off angle = 30 degrees (0.523599 radians)
+Default velocity = 400 km/hr
+
+In-air distance = 2354.01 km
+Travelling time = 5.88503 hours
+[hahma485@ins.mtroyal.ca ~/second_year/comp1631/assignments/assignment#2/a2> a.outg++ version1.cpp 
+[hahma485@ins.mtroyal.ca ~/second_year/comp1631/assignments/assignment#2/a2> g++ version1.cpp a.out[K
+Welcome to the Air Cha–Cha Distance Finder. Ready to calculate... 
+Enter ground distance (in kilometers): 10
+Enter flying-altitude (in feet): 1
+Enter angle for take-off (in degrees): 45
+
+Trip data:
+Ground distance = 10 km
+Altitude = 1 feet (0.0003048 km)
+Take-off angle = 45 degrees (0.785398 radians)
+Default velocity = 400 km/hr
+
+In-air distance = 10.0003 km
+Travelling time = 0.0250006 hours
+[hahma485@ins.mtroyal.ca ~/second_year/comp1631/assignments/assignment#2/a2> a.outg++ version1.cpp 
+[hahma485@ins.mtroyal.ca ~/second_year/comp1631/assignments/assignment#2/a2> g++ version1.cpp a.out[K
+Welcome to the Air Cha–Cha Distance Finder. Ready to calculate... 
+Enter ground distance (in kilometers): 700
+Enter flying-altitude (in feet): 500
+Enter angle for take-off (in degrees): 60
+
+Trip data:
+Ground distance = 700 km
+Altitude = 500 feet (0.1524 km)
+Take-off angle = 60 degrees (1.0472 radians)
+Default velocity = 400 km/hr
+
+In-air distance = 700.176 km
+Travelling time = 1.75044 hours
+[hahma485@ins.mtroyal.ca ~/second_year/comp1631/assignments/assignment#2/a2> cat version2.cpp 
+// Haris Ahmad
+// hahma485@mtroyal.ca
+// COMP 1631
+// Assignment #2
+// October 2nd, 2020
+// Paul Pospisil
+// version2.cpp
+/* Purpose: To calculate and compute the different components used in
+            calculating the overall in-are distance travelled and
+            travelling time.
+*/
+
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+int main()
+{
+// The integer names that are going to be user inputted.
+    double ground_distance;
+    double flying_altitude;
+    double takeoff_angle;
+    double landing_angle;
+    double velocity;
+    
+/* Welcomes the user to the program and asks them to input values that are used 
+   in calcuating the converted rates, in-air distance, velocity, and travelling
+   time.
+*/
+    cout << "Welcome to the Air Cha–Cha Distance Finder. Ready to calculate... "
+    << endl;
+    
+    cout << "Enter ground distance (in kilometers): ";
+    cin >> ground_distance;
+
+    cout << "Enter flying-altitude (in feet): "; 
+    cin >> flying_altitude;
+
+    cout << "Enter angle for take-off (in degrees): ";
+    cin >> takeoff_angle;
+
+    cout << "Enter angle for landing (in degrees): ";
+    cin >> landing_angle;
+
+    cout << "Enter flight velocity (in km/hr): ";
+    cin >> velocity;
+    
+    cout << endl;
+
+// The double values that are converted to km and radian(s) respectively
+// from the original input that the user made in feet and degrees.      
+    double converted_altitude;
+    double converted_takeoff_angle;
+    double converted_descent_angle;
+    
+// The double values that are used in calculating the in-air distance,
+// velocity, and landing time.
+    double takeoff_distance;
+    double descent_distance;
+    double initial_horizontal_distance;
+    double final_horizontal_distance;
+    double altitude_distance;
+
+// These are the double values which are outputted using the takeoff/descent
+// distances, horizontal distances, and altitude distance.
+    double in_air_distance;
+    double travelling_time;
+
+// Converts the altitude from feet to km and the takeoff/descent angles
+// from degrees to radians.    
+    converted_altitude = flying_altitude * 0.0003048;
+    converted_takeoff_angle = (takeoff_angle * (2 * M_PI)) / 360;
+    converted_descent_angle = (landing_angle * (2 * M_PI)) / 360;
+    
+// The calculations used to find out the takeoff/descent distance, the
+// initial and final horizontal distances, and altitude distance.
+    takeoff_distance = converted_altitude / sin(converted_takeoff_angle);
+    initial_horizontal_distance = converted_altitude /
+	tan(converted_takeoff_angle);
+    descent_distance = converted_altitude / sin(converted_descent_angle);
+    final_horizontal_distance = converted_altitude /
+	tan(converted_descent_angle);
+    altitude_distance = ground_distance - initial_horizontal_distance -
+	final_horizontal_distance;
+
+// The final calculations used to calculate the desired output based off of
+// the users input and the varying distances at different points in the flight.
+    in_air_distance = altitude_distance + takeoff_distance + descent_distance;
+    travelling_time = in_air_distance / velocity;
+
+// The output given to the user (trip data).
+    cout << "Trip data:" << endl;
+
+    cout << "Ground distance = " << ground_distance << " km" << endl;
+
+    cout << "Altitude = " << flying_altitude << " feet (";
+    cout << converted_altitude << " km)" << endl;
+
+    cout << "Take-off angle = " << takeoff_angle << " degrees (";
+    cout << converted_takeoff_angle << " radians)" << endl;
+
+    cout << "Landing angle = " << landing_angle << " degrees (";
+    cout << converted_descent_angle << " radians)" << endl;
+    
+    cout << "Flight velocity = " << velocity << " km/hr" << endl << endl;
+
+    cout << "In-air distance = " << in_air_distance << " km" << endl;
+
+    cout << "Travelling time = " << travelling_time << " hours" << endl;
+
+    
+ return 0;
+
+}
+[hahma485@ins.mtroyal.ca ~/second_year/comp1631/assignments/assignment#2/a2> g++ version2.cpp
+[hahma485@ins.mtroyal.ca ~/second_year/comp1631/assignments/assignment#2/a2> a.out
+Welcome to the Air Cha–Cha Distance Finder. Ready to calculate... 
+Enter ground distance (in kilometers): 1000
+Enter flying-altitude (in feet): 100
+Enter angle for take-off (in degrees): 45
+Enter angle for landing (in degrees): 45
+Enter flight velocity (in km/hr): 400
+
+Trip data:
+Ground distance = 1000 km
+Altitude = 100 feet (0.03048 km)
+Take-off angle = 45 degrees (0.785398 radians)
+Landing angle = 45 degrees (0.785398 radians)
+Flight velocity = 400 km/hr
+
+In-air distance = 1000.03 km
+Travelling time = 2.50006 hours
+[hahma485@ins.mtroyal.ca ~/second_year/comp1631/assignments/assignment#2/a2> 2354[K[K[K[Ka.outg++ version2.cpp
+[hahma485@ins.mtroyal.ca ~/second_year/comp1631/assignments/assignment#2/a2> g++ version2.cppa.out[K
+Welcome to the Air Cha–Cha Distance Finder. Ready to calculate... 
+Enter ground distance (in kilometers): 2354
+Enter flying-altitude (in feet): 84
+Enter angle for take-off (in degrees): 45
+Enter angle for landing (in degrees): 30
+Enter flight velocity (in km/hr): 400
+
+Trip data:
+Ground distance = 2354 km
+Altitude = 84 feet (0.0256032 km)
+Take-off angle = 45 degrees (0.785398 radians)
+Landing angle = 30 degrees (0.523599 radians)
+Flight velocity = 400 km/hr
+
+In-air distance = 2354.02 km
+Travelling time = 5.88504 hours
+[hahma485@ins.mtroyal.ca ~/second_year/comp1631/assignments/assignment#2/a2> a.outg++ version2.cpp
+[hahma485@ins.mtroyal.ca ~/second_year/comp1631/assignments/assignment#2/a2> g++ version2.cppa.out[K
+Welcome to the Air Cha–Cha Distance Finder. Ready to calculate... 
+Enter ground distance (in kilometers): 540
+Enter flying-altitude (in feet): 150
+Enter angle for take-off (in degrees): 25
+Enter angle for landing (in degrees): 35
+Enter flight velocity (in km/hr): 50
+
+Trip data:
+Ground distance = 540 km
+Altitude = 150 feet (0.04572 km)
+Take-off angle = 25 degrees (0.436332 radians)
+Landing angle = 35 degrees (0.610865 radians)
+Flight velocity = 50 km/hr
+
+In-air distance = 540.025 km
+Travelling time = 10.8005 hours
+[hahma485@ins.mtroyal.ca ~/second_year/comp1631/assignments/assignment#2/a2> a.outg++ version2.cpp
+[hahma485@ins.mtroyal.ca ~/second_year/comp1631/assignments/assignment#2/a2> g++ version2.cppa.out[K
+Welcome to the Air Cha–Cha Distance Finder. Ready to calculate... 
+Enter ground distance (in kilometers): 2573.89
+Enter flying-altitude (in feet): 261.6
+Enter angle for take-off (in degrees): 18.5
+Enter angle for landing (in degrees): 10.42
+Enter flight velocity (in km/hr): 298.05
+
+Trip data:
+Ground distance = 2573.89 km
+Altitude = 261.6 feet (0.0797357 km)
+Take-off angle = 18.5 degrees (0.322886 radians)
+Landing angle = 10.42 degrees (0.181863 radians)
+Flight velocity = 298.05 km/hr
+
+In-air distance = 2573.91 km
+Travelling time = 8.63583 hours
+[hahma485@ins.mtroyal.ca ~/second_year/comp1631/assignments/assignment#2/a2> exit
+exit
+
+Script done on 2020-10-01 16:00:48-06:00

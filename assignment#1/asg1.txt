@@ -1,0 +1,120 @@
+Haris Ahmad
+hahma485@mtroyal.ca
+COMP 1631-002
+Assignment #1
+September 23rd, 2020
+Paul Pospisil
+asg1.txt
+---------------------
+PROBLEM #1
+==========
+Polya's Specific Techniques:
+----------------------------
+Observation 1 - Restate the problem in your own words
+Observation 2 - Simplify the problem (eliminate irrelevant detail)
+Observation 3 - Represent the problem (symbols)
+Observation 4 - Classify the problem
+Observation 5 - Classify the problem
+
+
+
+PROBLEM #2
+==========
+(i) 1 input value
+    A finite sequence of 0 or more integer values.
+(ii) 2 output values
+     The two outputted values are integers.
+(iii) This algorithm determines whether or not the integer inputted is divisible
+      by 2 or 7 (and not 2) with no remainder and then prints out both counts.
+      
+
+
+PROBLEM #3
+==========
+Step #1
+----------
+Acute-equilateral - All side length's must be equal
+	    	  - All internal angles must be equal
+Acute-isosceles - Any two of the three side length's must be equal
+		- No sole internal angle is greater than 90 degrees
+Acute-scalene - None of the side length's are the same
+	      - None sole interanl angle is greater than 90 degrees
+
+Obtuse-isosceles - Ant two of the three side length's must be equal
+		 - One of the three internal angles is greater than 90 degrees
+Obtuse-scalene - None of the three side length's are equal
+	       - One of the three internal angles is greater than 90 degrees
+
+Right isosceles - Any two of the three side length's must be equal
+      		- One of the three internal angles must equal exactly 90 degrees
+Right scalene - None of the three side length's are equal
+      	      - One of the three interal angles must equal exactly 90 degrees
+
+Link: https://byjus.com/maths/types-of-triangles/
+
+
+Step #2
+----------
+Set triangle = "unspecified"
+
+read largest_angle
+read leftside
+read rightside
+read bottomside
+
+if largest_angle is < 90
+   if leftside = rightside = bottomside
+   then
+	set triangle = "acute-equilateral"
+   if leftside = rightside or leftside = bottomside or rightside = bottomside
+   then
+	set triangle = "acute-isosceles"
+   otheriwse
+	set triangle = "acute-scalene"
+
+if largest_angle is > 90
+   if leftside = rightside or leftside = bottomside or rightside = bottomside
+   then
+	set triangle = "obtuse-isosceles"
+   otherwise
+	set triangle = "obtuse-scalene"
+
+otherwise
+   if leftside = rightside or leftside = bottomside or rightside = bottomside
+        set triangle = "right-isosceles"
+   otherwise
+	set triangle = "right-scalene"
+
+write triangle
+
+
+
+PROBLEM #4
+==========
+set num_courses = 0 
+set total_credits = 0
+set total_grade_points = 0
+set GPA = 0.0
+
+read num_courses_taken
+read course_grade_points
+read course_credit_hours
+
+for each course in num_courses_taken
+    set num_courses = num_courses + 1
+        repeat until all courses in num_courses_taken have been read
+
+    total_grade_points = course_grade_points x course_credit_hours
+        repeat until end line of course_grade_points and course_credit_hours
+	has been read
+
+    for each course in course_credit_hours in total_credits
+        set total_credits = course_credit_hours + course_credit_hours
+            repeat until end line of course_credit_hours has been read
+
+if num_courses_taken = 0
+then
+    write "undefined GPA"
+
+otherwise set GPA = (total_grade_points / total_credits)
+    write GPA

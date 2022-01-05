@@ -1,0 +1,406 @@
+Script started on 2020-11-02 23:30:17-07:00
+bash: /opt/rh/rh-mysql56/enable: No such file or directory
+[hahma485@ins.mtroyal.ca ~/second_year/comp1631/assignments/assignment#4/a4p1> pwd
+/users/hahma485/second_year/comp1631/assignments/assignment#4/a4p1
+[hahma485@ins.mtroyal.ca ~/second_year/comp1631/assignments/assignment#4/a4p1> ls -al
+total 12
+drwxr-xr-x 2 hahma485 students.pg    40 Nov  2 23:30 [0m[01;34m.[0m
+drwxr-xr-x 3 hahma485 students.pg   164 Nov  2 23:29 [01;34m..[0m
+-rw-r--r-- 1 hahma485 students.pg 10976 Nov  2 23:29 asg4.cpp
+-rw-r--r-- 1 hahma485 students.pg     0 Nov  2 23:30 typescript
+[hahma485@ins.mtroyal.ca ~/second_year/comp1631/assignments/assignment#4/a4p1> cat asg4.cpp 
+/********************************************************************************
+ * Name: Haris Ahmad
+ * Email: hahma485@mtroyal.ca
+ * Course: COMP 1631
+ * Assignment: Assignment #4
+ * Due Date: November 2nd, 2020
+ * Instructor Name: Paul Pospisil
+ * File Name: asg4.cpp
+
+ * Purpose: To print out a customer bill at the end of the month that processes
+            the monthly transaction record which includes the users disk usage
+            and fees for an online web hosting service.
+
+ * Details: The program takes in the header record and monthly transaction 
+            record. The header record contains the account number, base monthly
+            charge, usage limit, and the disk usage at the beginning of the 
+            month. The monthly transaction record contains the maximum disk space
+            used during the month, the amount in use at the end of the month, and
+            a value which indidcates whether the transaction data is valid. After
+            receiving all of these values it will output a print statement to the
+            screen that contains the account number, disk allotment, beginning of
+            month usage, maximum usage in the month, usage at the end of the 
+            month, base charge fees, the surcharge fees, additional penalty 
+            surcharge fees, GST fees, and lastly the final amount due. However,
+            if there is an error a respective error message will appear on the
+            output.
+ 
+ * Assumptions/ Limiations: The program only processes a single customers monthly 
+                            disk usage. 
+ *******************************************************************************/
+#include <iostream>
+#include <iomanip>
+using namespace std;
+
+bool is_valid_account_number(int);
+void read_and_process(int, double, double&, double&, bool&);
+void calculate_bill(double, double, double, double, double&, double&,
+                    double&, double&);
+void print_bill(int, double, double, double, double, double, double,
+                double, double, double);
+
+int main()
+{
+    int account_num;
+
+    double usage_limit;
+    double initial_usage;
+    double max_usage;
+    double end_usage;
+
+    double base_charge;
+    double surcharge;
+    double gst;
+    double total_bill;
+
+    double penalty;
+    bool no_errors;
+    
+    surcharge = 0;
+    
+    cin >> account_num >> base_charge >> usage_limit >> initial_usage;
+
+    read_and_process (account_num, initial_usage, max_usage, end_usage, no_errors); 
+
+    if (no_errors == true)
+    {
+      	calculate_bill (base_charge, usage_limit, max_usage, end_usage, surcharge,
+			penalty, gst, total_bill);
+	print_bill (account_num, usage_limit, initial_usage, max_usage, end_usage,
+                    base_charge, surcharge, penalty, gst, total_bill);	
+    }
+    else
+    {
+	cout << "***Account " << account_num << " not processed due to errors ***" << endl;
+    }
+    
+    return 0;
+}
+
+/********************************************************************************
+ *Name: is_valid_account_number
+ *
+ *Purpose: To validate a customer's account number.
+ *
+ *Details: Uses a check digit to verify if the account number is valid and if it
+           is valid it outputs a boolean value = true. Otherwise the boolean
+           value = false and the account is not validated.
+ *
+ *Input: takes in the account number from the header record.
+ *******************************************************************************/
+bool is_valid_account_number (int account_num)
+{
+    // The 6 digits of account_num 
+    int dig6;
+    int dig5;
+    int dig4;
+    int dig3;
+    int dig2;
+    int dig1;
+
+    // The check digit which validates the account_num
+    int check_dig;
+
+    bool authorize;
+    
+    // The calculations that extract each digit of the account number
+    dig6 = account_num / 100000;
+    dig5 = (account_num / 10000) % 10;
+    dig4 = (account_num / 1000) % 10;
+    dig3 = (account_num / 100) % 10;
+    dig2 = (account_num / 10) % 10;
+    dig1 = account_num % 10;
+
+    // The calulation of the check digit
+    check_dig = (dig5 * 5) + (dig4 * 4) + (dig3 * 3) + (dig2 * 2) + dig1;
+    check_dig = check_dig % 10;
+    
+    // A decision that decides whether or not the account number is authorized
+    if (dig6 == check_dig)
+    {
+        authorize = true;
+    }
+    else
+    {
+        authorize = false;
+    }
+
+    return authorize;
+}
+
+/********************************************************************************
+ *Name: read_and_process
+ *
+ *Purpose: This function prints out an appropriate error message based off the
+           validity of the account number and the error value in the monthly 
+           tranaction record 
+ *
+ *Details: Three different if statements and each one corresponds to the type of
+           processing error.
+ *
+ *Input: The function takes in the account number and the disk usage at the start
+         of the month.
+ *******************************************************************************/
+void read_and_process (int account_num, double initial_usage, double& max_usage,
+                       double& end_usage, bool& no_errors)
+{
+    char error_value;
+
+    // The monthly transaction record values
+    cin >> max_usage >> end_usage >> error_value;
+
+    // Various decision options that can be outputted based on the account number
+    // validation and error_value that was user inputted.
+
+    no_errors = true;
+
+    if (is_valid_account_number(account_num) == false && error_value == 'F')
+    {
+	cout << "Invalid account number " << account_num << " found" << endl;
+	cout << "Bad monthly transaction record" << endl;
+	no_errors = false;
+    }
+    if (is_valid_account_number(account_num) == false && error_value == 'T')
+    {
+	cout << "Invalid account number " << account_num << " found" << endl;;
+	no_errors = false;
+    }
+    if (is_valid_account_number(account_num) == true && error_value == 'F')
+    {
+	cout << "Bad monthly transaction record" << endl;
+	no_errors = false;
+    }
+           
+    return;
+}
+
+/********************************************************************************
+ *Name: calculate_bill
+ *
+ *Purpose: To calculate the fees that are printed out at the end of the month
+           on the final disk usage statement.
+ *
+ *Details: Calculates the base charge, over-limit surcharge, gst, and total bill
+           using various if-else statements. The bill calculation is based off of
+           the maximum amount of disk space used during the month and the disk
+           usage at the end of the month. Extra fees are taxed on based on the
+           if the user goes over his disk-usage limit.
+ *
+ *Input: The maximum disk usage during the month and the disk usage at the end of
+         the month. 
+ *******************************************************************************/
+void calculate_bill (double base_charge, double usage_limit, double max_usage,
+                     double end_usage, double& surcharge, double& penalty,
+                     double& gst, double& total_bill)
+{
+    double overage = max_usage - usage_limit;
+
+    // If the overage is above the (max_usage - usage_limit) the user will be
+    // charged based on how much over the limit they went and the surcharge for
+    // the overage fee increases exponentially.
+    if (overage > 0 && overage <= 50)
+    {
+	surcharge = overage * 0.15;
+    }
+    else if (overage > 50 && overage <= 250.0)
+	surcharge = (50 * 0.15) + ((overage - 50) * 0.26);
+    else if (max_usage > 250.0 && max_usage <= 500.0)
+	surcharge = (50 * 0.15) + (200 * 0.26) + ((overage - 250 ) * 0.37);
+    else if (max_usage > 500)
+	surcharge = (50 * 0.15) + (200 * 0.26) + (250 * 0.37) + ((overage - 500) * 0.48); 
+
+    // determines the penalty fee using a decision statement   
+
+    penalty = (end_usage - usage_limit) * 0.05; 
+    if (end_usage < usage_limit)
+	penalty = 0;
+ 
+    if (penalty > 0 && penalty < 5)
+	penalty = 5;
+    if (penalty > 0)
+	penalty = penalty;
+
+    // The gst is 5% of the base_charge + surcharge + penalty
+    gst = (base_charge + surcharge + penalty) * 0.05;
+
+    // The total bill is the gst + base_charge + surcharge + penalty
+    total_bill = gst + base_charge + surcharge + penalty;
+    
+    return;
+}
+
+/********************************************************************************
+ *Name: print_bill
+ *
+ *Purpose: To return the account number, various types of user's disk usage, and
+           the fees they have to pay.
+ *
+ *Details: Outputs all the values to the screen in a specific allignment using
+           the #include <iomanip>. There is also an if-else statement which does
+           not show the penalty fee if it is equal to $0.00.
+ *
+ *Input: Takes in the account number, usage at the beginning of the month, the
+         maximum usage during the month, the usage-limit, the usage at the end of
+         the month, the base charge fee, the surchage fee, the penalty fee, 
+         gst fee, and total bill .
+ *******************************************************************************/
+void print_bill(int account_num, double initial_usage, double max_usage,
+		double usage_limit, double end_usage, double base_charge,
+		double surcharge, double penalty, double gst, double total_bill)
+{
+    cout << "Account Number:    " << account_num << endl << endl;
+
+    // sets the precision point of the outputted numbers in the bill statement.
+    cout.setf(ios::fixed);
+    cout << setprecision(3);
+
+    // The cout statements of the numbers that have a precision of 3
+    // (3 decimal places).
+    cout << left << setw(22) << "Disk Allotment: " << right << setw(10)
+	 << initial_usage << " MB" << endl;
+    cout << left << setw(22) << "Beginning of Month: " << right << setw(10)
+	 << max_usage << " MB"
+	 << endl;
+    cout << left << setw(22) << "Maximum during month: " << right << setw(10)
+	 << usage_limit << " MB" << endl;
+    cout << left << setw(22) << "End of Month: " << right << setw(10) << end_usage
+	 << " MB" << endl << endl;
+
+    cout << setprecision(2);
+
+    // The cout statements of teh numbers that have a precision of 2
+    // (2 decimal places).
+    cout << left << setw(22) << "Base Charge: " << right << setw(10)
+	 << base_charge << endl;
+    cout << left << setw(22) << "Over-limit Surcharge: " << right << setw(10)
+	 << surcharge << endl;
+
+    // An if statement that outputs the penalty if it is above $0.00 and if
+    // it is not then the penalty is not included at all in the final print
+    // bill.
+    if (penalty > 0)
+    {
+	cout << left << setw(22) << "Penalty Surcharge: " << right << setw(10)
+	     <<  penalty << endl;
+	cout << left << setw(22) << "GST: " << right << setw(10) << gst << endl;
+	cout << left << setw(21) << "Amount Due: " << "$" << right << setw(10)
+	     << total_bill << endl << endl;
+    }
+    else
+    {
+	cout << left << setw(22) << "GST: " << right << setw(10) << gst << endl;
+	cout << left << setw(21) << "Amount Due: " << "$" << right << setw(10)
+	     << total_bill << endl << endl;
+    }
+  
+    return;
+}
+[hahma485@ins.mtroyal.ca ~/second_year/comp1631/assignments/assignment#4/a4p1> g++ asg4.cpp -0 il[K[K[K bill[1P billo bill[C[C[C[C[C
+[hahma485@ins.mtroyal.ca ~/second_year/comp1631/assignments/assignment#4/a4p1> bill < /iu[K[Kusers/library/compas[K[K1631/assignments/a4/data_p1/data1[K0
+Account Number:    1111
+
+Disk Allotment:           50.000 MB
+Beginning of Month:       25.333 MB
+Maximum during month:     40.111 MB
+End of Month:             35.222 MB
+
+Base Charge:                6.25
+Over-limit Surcharge:       0.00
+GST:                        0.31
+Amount Due:          $      6.56
+
+[hahma485@ins.mtroyal.ca ~/second_year/comp1631/assignments/assignment#4/a4p1> bill < /users/library/comp1631/assignments/a4/data_p1/data0[C[K1
+Invalid account number 10000100 found
+***Account 10000100 not processed due to errors ***
+[hahma485@ins.mtroyal.ca ~/second_year/comp1631/assignments/assignment#4/a4p1> bill < /users/library/comp1631/assignments/a4/data_p1/data1[K2
+Invalid account number 751482 found
+***Account 751482 not processed due to errors ***
+[hahma485@ins.mtroyal.ca ~/second_year/comp1631/assignments/assignment#4/a4p1> bill < /users/library/comp1631/assignments/a4/data_p1/data2[K3
+Bad monthly transaction record
+***Account 420143 not processed due to errors ***
+[hahma485@ins.mtroyal.ca ~/second_year/comp1631/assignments/assignment#4/a4p1> bill < /users/library/comp1631/assignments/a4/data_p1/data3[K4
+Invalid account number 300143 found
+Bad monthly transaction record
+***Account 300143 not processed due to errors ***
+[hahma485@ins.mtroyal.ca ~/second_year/comp1631/assignments/assignment#4/a4p1> bill < /users/library/comp1631/assignments/a4/data_p1/data4[K5
+Account Number:    554321
+
+Disk Allotment:           50.000 MB
+Beginning of Month:        4.250 MB
+Maximum during month:      4.250 MB
+End of Month:              4.250 MB
+
+Base Charge:                6.25
+Over-limit Surcharge:       0.00
+GST:                        0.31
+Amount Due:          $      6.56
+
+[hahma485@ins.mtroyal.ca ~/second_year/comp1631/assignments/assignment#4/a4p1> bill < /users/library/comp1631/assignments/a4/data_p1/data5[K6
+Account Number:    951482
+
+Disk Allotment:           50.000 MB
+Beginning of Month:       35.733 MB
+Maximum during month:     55.500 MB
+End of Month:             42.125 MB
+
+Base Charge:                6.25
+Over-limit Surcharge:       0.82
+GST:                        0.35
+Amount Due:          $      7.43
+
+[hahma485@ins.mtroyal.ca ~/second_year/comp1631/assignments/assignment#4/a4p1> bill < /users/library/comp1631/assignments/a4/data_p1/data6[K7
+Account Number:    410203
+
+Disk Allotment:          100.000 MB
+Beginning of Month:       50.555 MB
+Maximum during month:    755.050 MB
+End of Month:             94.250 MB
+
+Base Charge:               75.00
+Over-limit Surcharge:     226.42
+GST:                       15.07
+Amount Due:          $    316.50
+
+[hahma485@ins.mtroyal.ca ~/second_year/comp1631/assignments/assignment#4/a4p1> bill < /users/library/comp1631/assignments/a4/data_p1/data7[K8
+Account Number:    875184
+
+Disk Allotment:          100.000 MB
+Beginning of Month:      105.000 MB
+Maximum during month:    426.000 MB
+End of Month:            110.000 MB
+
+Base Charge:               12.50
+Over-limit Surcharge:      87.62
+Penalty Surcharge:          5.00
+GST:                        5.26
+Amount Due:          $    110.38
+
+[hahma485@ins.mtroyal.ca ~/second_year/comp1631/assignments/assignment#4/a4p1> bill < /users/library/comp1631/assignments/a4/data_p1/data8[K9
+Account Number:    601010
+
+Disk Allotment:          100.000 MB
+Beginning of Month:        0.000 MB
+Maximum during month:    350.000 MB
+End of Month:            200.200 MB
+
+Base Charge:               12.50
+Over-limit Surcharge:      59.50
+Penalty Surcharge:          5.01
+GST:                        3.85
+Amount Due:          $     80.86
+
+[hahma485@ins.mtroyal.ca ~/second_year/comp1631/assignments/assignment#4/a4p1> exit
+exit
+
+Script done on 2020-11-02 23:35:08-07:00
